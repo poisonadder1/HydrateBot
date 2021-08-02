@@ -69,6 +69,8 @@ class HydrateBotClient(discord.Client):
                     cur.close()
                     conn.close()
                     await message.channel.send("VC text channel set to current channel, use $setupHB to configure the other settings")
+            else:
+                await message.channel.send("Sorry you don't have permissions to do that, you must be a server administrator")
         
         if message.content.startswith('$setupHB'):
             if message.author.guild_permissions.administrator:
@@ -87,11 +89,13 @@ class HydrateBotClient(discord.Client):
                         conn.commit()
                         cur.close()
                         conn.close()
+                        await message.channel.send("Settings updated")
                     else:
                         cur.execute("INSERT INTO guildsettings (guildid, timeoutduration,remindertime) WHERE guildid=%s", (timeoutDuration, reminderTime, str(guildID)))
                         conn.commit()
                         cur.close()
                         conn.close()
+                        await message.channel.send("Settings configured")
             else:
                 await message.channel.send("Sorry you don't have permissions to do that, you must be a server administrator")
 
